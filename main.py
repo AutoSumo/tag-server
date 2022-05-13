@@ -143,7 +143,7 @@ def main():
                 cv2.putText(frame, str(r.tag_id), (cX, cY),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-        websockets.broadcast(connections, json.dumps(extra))
+            websockets.broadcast(connections, json.dumps(extra))
 
         cv2.imshow('Frame', frame)
 
