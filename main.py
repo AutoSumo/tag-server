@@ -101,8 +101,8 @@ def main():
             cv2.line(frame, center_left, center_right, (0, 0, 0), 1)
             cv2.line(frame, center_top, center_bottom, (0, 0, 0), 1)
 
-            e_height = int(math.sqrt((abs(center_top[0]-center_bottom[0])**2) + (abs(center_top[1]-center_bottom[1])**2)) / 2)
-            e_width = int(math.sqrt((abs(center_left[0]-center_right[0])**2) + (abs(center_left[1]-center_right[1])**2)) / 2)
+            e_width = int(math.sqrt((abs(center_top[0]-center_bottom[0])**2) + (abs(center_top[1]-center_bottom[1])**2)) / 2)
+            e_height = int(math.sqrt((abs(center_left[0]-center_right[0])**2) + (abs(center_left[1]-center_right[1])**2)) / 2)
             angle = math.atan2(center_right[0]-midpoint[0], center_right[1]-midpoint[1])
 
             cv2.ellipse(frame, midpoint, (e_width, e_height), angle, 0, 360, (255, 0, 0))
