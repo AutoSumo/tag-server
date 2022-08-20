@@ -52,7 +52,7 @@ def main():
                                   tag_size=(tag_size_cm / 100))
 
         corners = [None, None, None, None]
-        corner_ids = [1, 2, 3, 4]
+        corner_ids = [3, 1, 2, 0]
 
         for r in tags:
             if corner_ids.count(r.tag_id) > 0:
@@ -115,33 +115,32 @@ def main():
             extra = []
 
             for t in tags:
-                if corner_ids.count(t.tag_id) > 0:
-                    continue
+                if corner_ids.count(t.tag_id) == 0:
+                    in_arr = [in_ellipse(int(p[0]), int(p[1]), midpoint[0], midpoint[1], e_width, e_height, angle) for p in t.corners]
+                    in_ell = in_arr.count(False) == 0
+                    color = (0, 255, 0) if in_ell else (0, 0, 255)
 
-                in_ell = in_ellipse(int(t.center[0]), int(t.center[1]), midpoint[0], midpoint[1], e_width, e_height, angle)
-                color = (0, 255, 0) if in_ell else (0, 0, 255)
+                    extra.append({'x': int(t.center[0]), 'y': int(t.center[1]), 'in': in_ell, 'id': t.tag_id})
 
-                extra.append({'x': int(t.center[0]), 'y': int(t.center[1]), 'in': in_ell, 'id': t.tag_id})
-
-                # extract the bounding box (x, y)-coordinates for the AprilTag
-                # and convert each of the (x, y)-coordinate pairs to integers
-                (ptA, ptB, ptC, ptD) = r.corners
-                ptB = (int(ptB[0]), int(ptB[1]))
-                ptC = (int(ptC[0]), int(ptC[1]))
-                ptD = (int(ptD[0]), int(ptD[1]))
-                ptA = (int(ptA[0]), int(ptA[1]))
-                # draw the bounding box of the AprilTag detection
-                cv2.line(frame, ptA, ptB, color, 2)
-                cv2.line(frame, ptB, ptC, color, 2)
-                cv2.line(frame, ptC, ptD, color, 2)
-                cv2.line(frame, ptD, ptA, color, 2)
-                # draw the center (x, y)-coordinates of the AprilTag
-                (cX, cY) = (int(r.center[0]), int(r.center[1]))
-                cv2.circle(frame, (cX, cY), 5, (0, 0, 255), -1)
-                # draw the tag family on the image
-                tagFamily = r.tag_family.decode("utf-8")
-                cv2.putText(frame, str(r.tag_id), (cX, cY),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                    # extract the bounding box (x, y)-coordinates for the AprilTag
+                    # and convert each of the (x, y)-coordinate pairs to integers
+                    (ptA, ptB, ptC, ptD) = t.corners
+                    ptB = (int(ptB[0]), int(ptB[1]))
+                    ptC = (int(ptC[0]), int(ptC[1]))
+                    ptD = (int(ptD[0]), int(ptD[1]))
+                    ptA = (int(ptA[0]), int(ptA[1]))
+                    # draw the bounding box of the AprilTag detection
+                    cv2.line(frame, ptA, ptB, color, 2)
+                    cv2.line(frame, ptB, ptC, color, 2)
+                    cv2.line(frame, ptC, ptD, color, 2)
+                    cv2.line(frame, ptD, ptA, color, 2)
+                    # draw the center (x, y)-coordinates of the AprilTag
+                    (cX, cY) = (int(t.center[0]), int(t.center[1]))
+                    cv2.circle(frame, (cX, cY), 5, (0, 0, 255), -1)
+                    # draw the tag family on the image
+                    tagFamily = t.tag_family.decode("utf-8")
+                    cv2.putText(frame, str(t.tag_id), (cX, cY),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
             websockets.broadcast(connections, json.dumps(extra))
 
