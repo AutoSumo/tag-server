@@ -5,7 +5,7 @@ Recognizes arena boundaries and robot locations using [apriltags](https://april.
 ```mermaid
 flowchart TD
     web["🌐 Web Interface"] -->|uploads code| code-server[("💾 Code Server\n(this)")]
-    code-server -->|hightlight data| web
+    code-server -->|highlight data| web
     code-server -->|downloads code| bot-server["💻 Bot Server"]
     bot-server -->|highlight data| code-server
     bot-server -->|motor instructions| robot["🤖 Robot"]
